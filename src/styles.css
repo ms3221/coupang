@@ -1,0 +1,186 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─────────────────────────────────────────────
+   Higgsfield 톤 — 인디고 글래스모피즘 다크
+   - 베이스: 밝은 인디고 다크 #12172a (+ 배경 그라데이션 글로우)
+   - 액센트 그라데이션: 시안 #22d3ee → 인디고 #818cf8 → 퍼플 #c084fc
+   - 카드: 반투명 + backdrop-blur (글래스)
+   - 다크 단일 고정 (index.html html.dark)
+   ───────────────────────────────────────────── */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #12172a;
+  /* 은은한 시안/퍼플/인디고 글로우 블롭 — 글래스가 살아나도록 */
+  background-image:
+    radial-gradient(ellipse 80% 55% at 12% -5%, rgba(34, 211, 238, 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 100% 12%, rgba(192, 132, 252, 0.12), transparent 60%),
+    radial-gradient(ellipse 65% 55% at 50% 110%, rgba(129, 140, 248, 0.10), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* ── 그라데이션 유틸 ─────────────────────────── */
+.text-gradient-accent {
+  background: linear-gradient(90deg, #22d3ee, #818cf8 55%, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.bg-gradient-accent {
+  background-image: linear-gradient(135deg, #22d3ee, #818cf8 55%, #c084fc);
+}
+/* 글래스 패널 (카드 외 임의 요소에 재사용) */
+.glass {
+  background-color: rgba(36, 45, 75, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* 라이트/다크 동일 값 — 다크 단일 고정 */
+:root,
+.dark {
+  /* 베이스 (밝아진 인디고 다크) */
+  --background: #12172a;
+  --foreground: #d6dcec;
+
+  /* 카드/팝오버: 글래스 (반투명, backdrop-blur는 컴포넌트에서) */
+  --card: rgba(36, 45, 75, 0.5);
+  --card-foreground: #d6dcec;
+  --popover: rgba(26, 32, 56, 0.96);
+  --popover-foreground: #d6dcec;
+
+  /* 포인트: 시안 (그라데이션 양 끝의 기준점) */
+  --primary: #22d3ee;
+  --primary-foreground: #06141a;
+
+  /* 보조 */
+  --secondary: rgba(255, 255, 255, 0.06);
+  --secondary-foreground: #d6dcec;
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: #8b96ad;
+
+  /* 악센트: 인디고 틴트 (호버/하이라이트) */
+  --accent: rgba(129, 140, 248, 0.16);
+  --accent-foreground: #c7cdff;
+
+  /* 경고/삭제: 네온 로즈 */
+  --destructive: #fb5d7a;
+
+  /* 보더/인풋/링: 글래스 보더 + 시안 포커스 */
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.06);
+  --ring: #22d3ee;
+
+  /* 차트: 시안 → 인디고 → 퍼플 그라데이션 계열 */
+  --chart-1: #22d3ee;
+  --chart-2: #38bdf8;
+  --chart-3: #818cf8;
+  --chart-4: #a855f7;
+  --chart-5: #c084fc;
+
+  --radius: 0.65rem;
+
+  /* 사이드바 */
+  --sidebar: rgba(26, 32, 56, 0.6);
+  --sidebar-foreground: #d6dcec;
+  --sidebar-primary: #22d3ee;
+  --sidebar-primary-foreground: #06141a;
+  --sidebar-accent: rgba(129, 140, 248, 0.16);
+  --sidebar-accent-foreground: #c7cdff;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #22d3ee;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* 클릭 가능한 요소는 손가락 커서로 (HUD/현대 UI 톤) */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  a[href],
+  label[for],
+  summary,
+  select:not(:disabled) {
+    cursor: pointer;
+  }
+}

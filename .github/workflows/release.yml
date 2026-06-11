@@ -1,0 +1,52 @@
+name: release
+
+# v로 시작하는 태그를 push하면 빌드+릴리스 (예: git tag v0.1.0 && git push --tags)
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest # mac: universal(.dmg)
+            args: "--target universal-apple-darwin"
+          - platform: windows-latest # win: .exe(NSIS) + .msi
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: setup rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: install deps
+        run: npm ci
+
+      - name: build & release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # updater 서명 키 (repo Settings → Secrets에 등록)
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "Coupilot ${{ github.ref_name }}"
+          releaseBody: "자동 생성된 릴리스입니다. 아래 dmg(mac)/exe(Windows)를 받으세요."
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}

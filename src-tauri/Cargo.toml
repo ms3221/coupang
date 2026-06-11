@@ -1,0 +1,46 @@
+[package]
+name = "coupang_tauri"
+version = "0.1.0"
+description = "쿠팡 셀러 상품 자동등록 데스크톱 앱"
+authors = ["ondam"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "coupang_tauri_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# HTTP 클라이언트 (rustls-tls: OpenSSL 의존 없이 크로스플랫폼)
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+# 쿠팡 HMAC-SHA256 서명
+hmac = "0.12"
+sha2 = "0.10"
+hex = "0.4"
+# UTC datetime 포맷
+chrono = "0.4"
+# 크롤링 (HTML 파싱)
+scraper = "0.20"
+# UUID 생성
+uuid = { version = "1", features = ["v4"] }
+# 로컬 SQLite (bundled: SQLite 소스 내장 → 무설치)
+rusqlite = { version = "0.32", features = ["bundled"] }
+# 비동기 런타임 유틸 (5초 대기 등)
+tokio = { version = "1", features = ["time"] }
+# 에러 타입
+thiserror = "1"
+tauri-plugin-updater = "2.10.1"
+tauri-plugin-process = "2.3.1"
+
