@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Package, ScrollText, Settings, Plus } from "lucide-react";
+import { getVersion } from "@tauri-apps/api/app";
 
 import {
   Sidebar,
@@ -60,6 +62,11 @@ export default function AppSidebar() {
   const errorCount = logs.filter((l) => l.status === "error").length;
   const conn = useCoupangStatus();
   const m = CONN_META[conn.status];
+  const [version, setVersion] = useState("");
+
+  useEffect(() => {
+    getVersion().then(setVersion).catch(() => {});
+  }, []);
 
   return (
     <Sidebar collapsible="icon">
@@ -121,6 +128,11 @@ export default function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        {version && (
+          <div className="px-2 pb-0.5 font-mono text-[10px] text-muted-foreground group-data-[collapsible=icon]:hidden">
+            v{version}
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
