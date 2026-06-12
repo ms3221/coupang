@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
+import { getVersion } from "@tauri-apps/api/app";
+
 import { api } from "../lib/api";
 import { useCoupangStatus, verifyCoupang } from "@/lib/coupang-status";
+import { checkForUpdate } from "@/lib/updater";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +44,12 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupData, setLookupData] = useState<any>(null);
+  const [appVersion, setAppVersion] = useState("");
   const conn = useCoupangStatus();
+
+  useEffect(() => {
+    getVersion().then(setAppVersion).catch(() => {});
+  }, []);
 
   const get = (k: string) => form[k] ?? "";
   const set = (k: string, v: string) => setForm((p) => ({ ...p, [k]: v }));
@@ -312,6 +320,28 @@ export default function Settings() {
                   <Field label="반품지 상세주소"><Input value={get(K.returnAddressDetail)} onChange={(e) => set(K.returnAddressDetail, e.target.value)} /></Field>
                   <Field label="출고지 주소코드"><Input value={get(K.outboundShippingPlaceCode)} onChange={(e) => set(K.outboundShippingPlaceCode, e.target.value)} /></Field>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* 정보 / 업데이트 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">정보</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center justify-between gap-4">
+                <span className="text-sm text-muted-foreground">
+                  Coupilot 버전{" "}
+                  <span className="font-mono text-foreground">
+                    {appVersion || "—"}
+                  </span>
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => checkForUpdate(false)}
+                >
+                  업데이트 확인
+                </Button>
               </CardContent>
             </Card>
 
