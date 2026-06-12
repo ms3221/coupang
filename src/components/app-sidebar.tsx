@@ -70,7 +70,7 @@ export default function AppSidebar() {
         >
           <span className="bg-gradient-accent inline-block size-2.5 shrink-0 rounded-full shadow-[0_0_10px_rgba(129,140,248,0.7)]" />
           <span className="text-gradient-accent group-data-[collapsible=icon]:hidden">
-            COUPANG
+            Coupilot
           </span>
         </Link>
       </SidebarHeader>
